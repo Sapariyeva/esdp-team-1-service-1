@@ -26,6 +26,16 @@ export class QrController {
     }
   };
 
+  public renderQr: RequestHandler = async (req, res, next): Promise<void> => {
+    try {
+      const { uuid } = req.params;
+      const svg = await this.service.getQrSvg(uuid);
+      res.render('index', { svg });
+    } catch (err) {
+      next(err);
+    }
+  };
+
   public validateQr: RequestHandler = async (req, res, next): Promise<void> => {
     try {
       const dto = plainToInstance(QrValidateDTO, req.body);

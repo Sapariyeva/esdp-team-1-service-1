@@ -26,6 +26,11 @@ export class QrService {
     } 
   }
 
+  public getQrSvg = async (uuid: string): Promise<string | null> => {
+    const qr = await this.repository.getQrByUUID(uuid);
+    return qr ? qr.svg : null;
+  }
+
   public validateQr = async (data: IValidateQr): Promise<boolean> => {
     const decryptedUuid = decryptQr(data.hash, params.secret);
     const qr = await this.repository.getQrByUUID(decryptedUuid);

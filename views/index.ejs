@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Umanu Access</title>
+  <link href="/css/style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+  <div class="container">
+    <h1>Umanu QR</h1>
+    <% if(svg){ %>
+      <div class="qrContainer">
+        <img src="data:image/svg+xml;base64,<%= svg %>"  alt="Umanu QR-code"/>
+      </div>
+      <p class="hint">Поднесите экран телефона к камере для получения доступа</p>
+      <% } else { %>
+        <h2 class="alert">Invalid or expired link<h2>
+    <% } %>
+  </div>
+</body>
+</html>
