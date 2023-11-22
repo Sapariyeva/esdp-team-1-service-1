@@ -19,7 +19,7 @@ export class QrCode implements IQrCode {
   @Column()
   phone!: string;
 
-  @Column({ type: 'timestamp' })
+  @Column()
   valid_from!: number;
 
   @Column()

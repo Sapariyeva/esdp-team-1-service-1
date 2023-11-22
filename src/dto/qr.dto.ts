@@ -1,5 +1,5 @@
 import { Expose } from 'class-transformer';
-import { ArrayMinSize, IsArray, IsNotEmpty, IsPhoneNumber, IsRFC3339, IsString } from 'class-validator';
+import { ArrayMinSize, IsArray, IsNotEmpty, IsNumber, IsPhoneNumber, IsString } from 'class-validator';
 
 export class QrDTO {
   @Expose()
@@ -22,11 +22,11 @@ export class QrDTO {
 
   @Expose()
   @IsNotEmpty()
-  @IsRFC3339()
-  valid_from!: string;
+  @IsNumber()
+  valid_from!: number;
 
   @Expose()
   @IsNotEmpty()
-  @IsRFC3339()
-  valid_to!: string;
+  @IsNumber()
+  valid_to!: number;
 }
