@@ -30,3 +30,16 @@ export class QrDTO {
   @IsNumber()
   valid_to!: number;
 }
+
+
+export class QrValidateDTO {
+  @Expose()
+  @IsNotEmpty()
+  @IsString()
+  lock!: string;
+
+  @Expose()
+  @IsNotEmpty()
+  @IsString()
+  hash!: string;
+}
