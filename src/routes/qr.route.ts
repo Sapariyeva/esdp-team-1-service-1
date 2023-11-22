@@ -13,6 +13,6 @@ export class QrRoute implements IRoute {
   }
 
   private init() {
-    //route paths and controller methods/middlewares will be here
+    this.router.post('/generate', this.controller.generateQr);
   }
 }
