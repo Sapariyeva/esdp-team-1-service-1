@@ -7,3 +7,8 @@ export interface IQrCode {
   valid_from: number;
   valid_to: number;
 }
+
+export interface IValidateQr {
+  lock: string;
+  hash: string;
+}

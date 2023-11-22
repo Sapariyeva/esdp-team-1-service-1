@@ -20,4 +20,8 @@ export class QrRepository extends Repository<QrCode> {
     newQr.valid_to = dto.valid_to;
     return await this.save(newQr);
   }
+
+  async getQrByUUID(uuid: string): Promise<IQrCode | null> {
+    return this.findOne({where: {uuid}})
+  }
 }

@@ -19,9 +19,9 @@ export class QrCode implements IQrCode {
   @Column()
   phone!: string;
 
-  @Column()
+  @Column({ type: 'bigint' })
   valid_from!: number;
 
-  @Column()
+  @Column({ type: 'bigint' })
   valid_to!: number;
 }

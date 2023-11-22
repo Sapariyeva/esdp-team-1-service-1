@@ -14,5 +14,6 @@ export class QrRoute implements IRoute {
 
   private init() {
     this.router.post('/generate', this.controller.generateQr);
+    this.router.post('/validate', this.controller.validateQr);
   }
 }
