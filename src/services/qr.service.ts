@@ -3,8 +3,7 @@ import { QrDTO } from '@/dto/qr.dto';
 import { decryptQr, encryptQr } from '@/helpers/cipher';
 import { IValidateQr } from '@/interfaces/qr.interface';
 import { QrRepository } from '@/repositories/qr.repository';
-import { randomUUID } from 'crypto';
-import QRCode from "qrcode";
+import QRCode from 'qrcode';
 
 export class QrService {
   private repository: QrRepository;
@@ -15,22 +14,19 @@ export class QrService {
 
   public generateQr = async (dto: QrDTO): Promise<string | void> => {
     try {
-      dto.uuid = randomUUID();
-      const cryptedUuid = encryptQr(dto.uuid, params.secret);
-      const svg = await QRCode.toString(cryptedUuid, {type: 'svg'});
+      const cryptedUuid = encryptQr(dto.id!, params.secret);
+      const svg = await QRCode.toString(cryptedUuid, { type: 'svg' });
       dto.svg = Buffer.from(svg).toString('base64');
       const qrData = await this.repository.createQr(dto);
-      return `${params.qrBaseUrl}${qrData.uuid}` 
+      return `${params.qrBaseUrl}${qrData.uuid}`;
     } catch (err) {
       console.log(err);
-    } 
-  }
-
+    }
+  };
   public getQrSvg = async (uuid: string): Promise<string | null> => {
     const qr = await this.repository.getQrByUUID(uuid);
     return qr ? qr.svg : null;
-  }
-
+  };
   public validateQr = async (data: IValidateQr): Promise<boolean> => {
     const decryptedUuid = decryptQr(data.hash, params.secret);
     const qr = await this.repository.getQrByUUID(decryptedUuid);
@@ -47,5 +43,5 @@ export class QrService {
         return false;
       }
     }
-  } 
+  };
 }

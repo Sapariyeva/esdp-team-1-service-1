@@ -1,6 +1,6 @@
 import { QrController } from '@/controllers/qr.controller';
 import { Router } from 'express';
-import { IRoute } from '../interfaces/route.interface';
+import { IRoute } from '@/interfaces/route.interface';
 
 export class QrRoute implements IRoute {
   public path = '/';

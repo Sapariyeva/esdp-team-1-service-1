@@ -12,7 +12,7 @@ export class QrRepository extends Repository<QrCode> {
 
   async createQr(dto: QrDTO): Promise<IQrCode> {
     const newQr = new QrCode();
-    newQr.uuid = dto.uuid!;
+    newQr.uuid = dto.id!;
     newQr.svg = dto.svg!;
     newQr.locks = dto.locks;
     newQr.phone = dto.phone;
