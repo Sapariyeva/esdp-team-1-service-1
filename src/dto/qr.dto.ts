@@ -3,7 +3,9 @@ import { ArrayMinSize, IsArray, IsNotEmpty, IsNumber, IsPhoneNumber, IsString } 
 
 export class QrDTO {
   @Expose()
-  uuid?: string;
+  @IsNotEmpty()
+  @IsString()
+  id!: string;
 
   @Expose()
   svg?: string;
@@ -30,7 +32,6 @@ export class QrDTO {
   @IsNumber()
   valid_to!: number;
 }
-
 
 export class QrValidateDTO {
   @Expose()
