@@ -8,10 +8,11 @@ import axios, { AxiosInstance } from 'axios';
 
 export class QrService {
   private repository: QrRepository;
-  private logAxios: AxiosInstance = axios.create({ baseURL: 'http://localhost:8002' });
+  private logAxios: AxiosInstance;
 
   constructor() {
     this.repository = new QrRepository();
+    this.logAxios = axios.create({ baseURL: params.logBaseUrl });
   }
 
   public generateQr = async (dto: QrDTO): Promise<string | void> => {
@@ -30,24 +31,36 @@ export class QrService {
     return qr ? qr.svg : null;
   };
   public validateQr = async (data: IValidateQr): Promise<boolean> => {
-    const decryptedUuid = decryptQr(data.hash, params.secret);
-    const qr = await this.repository.getQrByUUID(decryptedUuid);
     const log: ILog = {
-      access_uuid: decryptedUuid,
+      access_uuid: null,
       lock: data.lock,
-      phone: qr?.phone,
+      phone: null,
       attempted_at: new Date().getTime(),
       attempt_status: false,
     };
 
-    if (!qr) {
+    if (!data.hash) {
+      log.access_uuid = 'validate error'; // только для того чтобы отличить в базе
       await this.logAxios.post('/logs', log);
       return false;
     }
 
-    const currentTimestamp = new Date().getTime();
-    log.attempt_status = qr.locks.includes(data.lock);
-    await this.logAxios.post('/logs', log);
-    return log.attempt_status && currentTimestamp > qr.valid_from && currentTimestamp < qr.valid_to;
+    try {
+      const decryptedUuid = decryptQr(data.hash, params.secret);
+      const qr = await this.repository.getQrByUUID(decryptedUuid);
+
+      if (qr) {
+        log.access_uuid = decryptedUuid;
+        log.phone = qr.phone;
+        const currentTimestamp = new Date().getTime();
+        log.attempt_status = qr.locks.includes(data.lock) && currentTimestamp > qr.valid_from && currentTimestamp < qr.valid_to;
+      }
+
+      await this.logAxios.post('/logs', log);
+      return log.attempt_status;
+    } catch (error) {
+      await this.logAxios.post('/logs', log);
+      return false;
+    }
   };
 }

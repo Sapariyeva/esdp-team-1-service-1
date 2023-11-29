@@ -40,7 +40,7 @@ export class QrController {
     try {
       const dto = plainToInstance(QrValidateDTO, req.body);
       const errs = await validate(dto, { whitelist: true });
-      if (errs.length > 0) throw errs;
+      if (errs.length > 0) next(errs);
       const permission = await this.service.validateQr(dto);
       if (permission) {
         res.status(200).send({

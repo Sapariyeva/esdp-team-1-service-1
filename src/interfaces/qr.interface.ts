@@ -14,9 +14,9 @@ export interface IValidateQr {
 }
 
 export interface ILog {
-  access_uuid: string;
+  access_uuid: string | null;
   lock: string;
-  phone?: string;
+  phone: string | null;
   attempted_at: number | null;
   attempt_status: boolean;
 }
