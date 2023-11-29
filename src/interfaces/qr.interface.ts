@@ -12,3 +12,11 @@ export interface IValidateQr {
   lock: string;
   hash: string;
 }
+
+export interface ILog {
+  access_uuid: string | null;
+  lock: string;
+  phone: string | null;
+  attempted_at: number | null;
+  attempt_status: boolean;
+}

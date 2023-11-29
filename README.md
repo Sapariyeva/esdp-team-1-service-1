@@ -9,6 +9,7 @@ npm i
 
 * **PORT** - port for listening
 * **DB_URI** - Postgres connection string
+* **LOG_BASE_URL** - base service Url for log sending
 * **QR_BASE_URL** - base service URL for links creation
 * **SECRET** - secret key for QR encription/decription
 
