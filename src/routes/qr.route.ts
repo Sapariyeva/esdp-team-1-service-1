@@ -14,7 +14,10 @@ export class QrRoute implements IRoute {
 
   private init() {
     this.router.post('/generate', this.controller.generateQr);
-    this.router.post('/validate', this.controller.validateQr);
+
+    // Change the method for the validate route to GET
+    this.router.get('/validate', this.controller.validateQr);
+
     this.router.get('/:uuid', this.controller.renderQr);
   }
 }
