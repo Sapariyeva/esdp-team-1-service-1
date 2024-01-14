@@ -38,11 +38,10 @@ export class QrController {
 
   // Update to extract data from headers for validate route
   public validateQr: RequestHandler = async (req, res, next): Promise<void> => {
-    try {
+    try {   
       const lock = req.headers['lock_uid'] as string;
       const hash = req.headers['hash'] as string;
-
-      // const dto = plainToInstance(QrValidateDTO, req.body);
+      
       const dto = plainToInstance(QrValidateDTO, { lock, hash });
       const errs = await validate(dto, { whitelist: true });
       
