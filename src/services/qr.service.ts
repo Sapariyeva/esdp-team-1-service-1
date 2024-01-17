@@ -5,14 +5,41 @@ import { ILog, IQrCode, IValidateQr } from '@/interfaces/qr.interface';
 import { QrRepository } from '@/repositories/qr.repository';
 import QRCode from 'qrcode';
 import axios, { AxiosInstance } from 'axios';
+import crypto from 'crypto';
+import bcrypt from 'bcrypt';
 
 export class QrService {
   private repository: QrRepository;
   private logAxios: AxiosInstance;
+  private secretKey: string;
+  private hashKey: string;
 
   constructor() {
     this.repository = new QrRepository();
     this.logAxios = axios.create({ baseURL: params.logBaseUrl });
+    this.secretKey = params.secret || '';
+    this.hashKey = params.secretHTTP || '';
+  }
+
+  private createSignature(data: string): string {
+    const hmac = crypto.createHmac('sha256', this.secretKey);
+    return hmac.update(data).digest('hex');
+  }
+
+  private async sendRequest(data: any): Promise<any> {
+    const signature = this.createSignature(JSON.stringify(data));
+    const headers = {
+      'X-Signature': signature,
+      'X-Secret-Hash': await bcrypt.hash(this.secretKey, 10),
+    };
+
+    try {
+      const response = await axios.post(params.qrBaseUrl, data, { headers });
+      return response.data;
+    } catch (error) {
+      console.error('Error sending request:', error);
+      throw new Error('Failed to send request.');
+    }
   }
 
   public generateQr = async (dto: QrDTO): Promise<string | void> => {
@@ -21,15 +48,36 @@ export class QrService {
       const svg = await QRCode.toString(cryptedUuid, { type: 'svg' });
       dto.svg = Buffer.from(svg).toString('base64');
       const qrData = await this.repository.createQr(dto);
-      return `${params.qrBaseUrl}${qrData.uuid}`;
+
+      const signatureData = {
+        type: 'generateQr',
+        data: dto,
+      };
+      const signature = this.createSignature(JSON.stringify(signatureData));
+
+      const requestData = {
+        ...signatureData,
+        signature: signature,
+      };
+
+      const response = await this.sendRequest(requestData);
+
+      if (response.success) {
+        return `${params.qrBaseUrl}${qrData.uuid}`;
+      } else {
+        throw new Error('Failed to generate QR in the other service.');
+      }
     } catch (err) {
-      console.log(err);
+      console.error('Error generating QR:', err);
+      throw new Error('Failed to generate QR.');
     }
   };
+
   public getQrSvg = async (uuid: string): Promise<string | null> => {
     const qr: IQrCode | null = await this.repository.getQrByUUID(uuid);
     return qr ? qr.svg : null;
   };
+
   public validateQr = async (data: IValidateQr): Promise<boolean> => {
     const log: ILog = {
       access_uuid: null,
