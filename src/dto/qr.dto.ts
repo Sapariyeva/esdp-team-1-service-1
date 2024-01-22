@@ -1,6 +1,6 @@
-import { IsValidFromDate, IsValidToDate } from '@/dto/validators/qr.validator';
 import { Expose } from 'class-transformer';
 import { ArrayMinSize, IsArray, IsNotEmpty, IsNumber, IsPhoneNumber, IsString } from 'class-validator';
+import { IsValidDate } from './validators/qr.validator';
 
 export class QrDTO {
   @Expose()
@@ -26,14 +26,14 @@ export class QrDTO {
   @Expose()
   @IsNotEmpty()
   @IsNumber()
-  @IsValidFromDate({ message: 'Valid from date must be equal or more current time minus 1 minute' })
-  valid_from!: number;
+  @IsValidDate({message: "valid_from must be convertable to Date format"})
+  valid_to!: number;
 
   @Expose()
   @IsNotEmpty()
   @IsNumber()
-  @IsValidToDate('valid_from', { message: 'Valid to date must be at least 1 hour later than valid from' })
-  valid_to!: number;
+  @IsValidDate({message: "valid_from must be convertable to Date format"})
+  valid_from!: number;
 }
 
 export class QrValidateDTO {
@@ -47,3 +47,4 @@ export class QrValidateDTO {
   @IsString()
   hash!: string;
 }
+
