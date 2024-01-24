@@ -9,6 +9,7 @@ type TEnvConfig = {
   qrBaseUrl: string;
   logBaseUrl: string
   secret: string;
+  secretHTTP: string;
 };
 
 export const params: TEnvConfig = {
@@ -16,5 +17,6 @@ export const params: TEnvConfig = {
   dbUri: process.env.DB_URI,
   qrBaseUrl: process.env.QR_BASE_URL,
   logBaseUrl: process.env.LOG_BASE_URL,
-  secret: process.env.SECRET,
+  secret: process.env.SECRET_PRIVATE,
+  secretHTTP: process.env.SECRET_HTTP
 };
