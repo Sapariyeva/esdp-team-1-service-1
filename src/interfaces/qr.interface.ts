@@ -20,3 +20,21 @@ export interface ILog {
   attempted_at: number | null;
   attempt_status: boolean;
 }
+
+export type IWeeklyScheduleElement = {
+  start: number,
+  end: number,
+  isActive: boolean
+}
+
+export interface IWeeklySchedule {
+  id: string;
+  name: string,
+  author: string;
+  schedule: IWeeklyScheduleElement[]
+}
+
+export interface IWeeklyQrCode extends IQrCode {
+  schedule: IWeeklyScheduleElement[]
+}
+

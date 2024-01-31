@@ -12,6 +12,7 @@ export class QrRepository extends Repository<QrCode> {
 
   async createQr(dto: QrDTO): Promise<IQrCode> {
     const newQr = new QrCode();
+    if (!dto.id) throw new Error('No QR Id')
     newQr.uuid = dto.id!;
     newQr.svg = dto.svg!;
     newQr.locks = dto.locks;

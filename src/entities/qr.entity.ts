@@ -1,4 +1,4 @@
-import { IQrCode } from '@/interfaces/qr.interface';
+import { IQrCode, IWeeklyQrCode, IWeeklyScheduleElement } from '@/interfaces/qr.interface';
 import { Entity, Column, PrimaryGeneratedColumn, Unique } from 'typeorm';
 
 @Entity({ name: 'qr_codes' })
@@ -24,4 +24,11 @@ export class QrCode implements IQrCode {
 
   @Column({ type: 'bigint' })
   valid_to!: number;
+}
+
+@Entity({ name: 'weekly_qr_codes' })
+@Unique(['uuid'])
+export class WeeklyQrCode extends QrCode implements IWeeklyQrCode {
+  @Column({type:'jsonb'})
+  schedule!: IWeeklyScheduleElement[];
 }
