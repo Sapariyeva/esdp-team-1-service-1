@@ -43,7 +43,7 @@ export class QrController {
     }
   };
 
-  // Update to extract data from headers for validate route
+
   public validateQr: RequestHandler = async (req, res, next): Promise<void> => {
     try {
       const lock = req.headers['lock_uid'] as string;

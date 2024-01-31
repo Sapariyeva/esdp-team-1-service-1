@@ -15,11 +15,11 @@ export class WeeklyQrService {
     // this.logAxios = axios.create({ baseURL: params.logBaseUrl });
   }
 
-  public getQrByUUID = async (id:string) => {
-    try{
+  public getQrByUUID = async (id: string) => {
+    try {
       return this.repository.getQrByUUID(id)
     }
-    catch{
+    catch {
       return null
     }
   }
@@ -58,18 +58,12 @@ export class WeeklyQrService {
     try {
       const decryptedUuid = decryptQr(data.hash, params.secret);
       const qr = await this.repository.getQrByUUID(decryptedUuid);
-
       if (qr) {
-        // log.access_uuid = decryptedUuid;
-        // log.phone = qr.phone;
-        // const currentTimestamp = new Date().getTime();
-        // log.attempt_status = qr.locks.includes(data.lock) && currentTimestamp > qr.valid_from && currentTimestamp < qr.valid_to;
-        return  checkWeeklyQrAttempt(qr, data)
+        log.access_uuid = decryptedUuid;
+        log.phone = qr.phone;
+        log.attempt_status = checkWeeklyQrAttempt(qr, data)
+        return log.attempt_status
       }
-      // log.attempt_status = qr.locks.includes(data.lock) && currentTimestamp > qr.valid_from && currentTimestamp < qr.valid_to;
-
-      // await this.logAxios.post('/logs', log);
-      // return log.attempt_status;
       return false
     } catch (error) {
       // await this.logAxios.post('/logs', log);
@@ -78,17 +72,17 @@ export class WeeklyQrService {
   };
 }
 
-const checkWeeklyQrAttempt = (qr:IWeeklyQrCode, data: IValidateQr) => {
+const checkWeeklyQrAttempt = (qr: IWeeklyQrCode, data: IValidateQr) => {
   const currentDate = new Date()
   const currentTimestamp = currentDate.getTime();
   const dayOfWeek = currentDate.getDay();
   const thisDaySchedule = qr.schedule[dayOfWeek]
-  const currentMomentOfDay = currentTimestamp- {...currentDate}.setHours(0, 0, 0, 0);
+  const currentMomentOfDay = currentTimestamp - { ...currentDate }.setHours(0, 0, 0, 0);
   const isLockIncluded = qr.locks.includes(data.lock)
   const isNotExpired = currentTimestamp > qr.valid_from && currentTimestamp < qr.valid_to
-  const isWithinDayAccess = (thisDaySchedule.isActive && 
-    currentMomentOfDay>=thisDaySchedule.start &&
-    currentMomentOfDay<= thisDaySchedule.end)
+  const isWithinDayAccess = (thisDaySchedule.isActive &&
+    currentMomentOfDay >= thisDaySchedule.start &&
+    currentMomentOfDay <= thisDaySchedule.end)
   return (isLockIncluded && isNotExpired && isWithinDayAccess)
 
 }

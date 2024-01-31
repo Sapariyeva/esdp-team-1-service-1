@@ -41,29 +41,3 @@ export class WeeklyQrController {
     }
   };
 }
-
-  // Update to extract data from headers for validate route
-//   public validateQr: RequestHandler = async (req, res, next): Promise<void> => {
-//     try {   
-//       const lock = req.headers['lock_uid'] as string;
-//       const hash = req.headers['hash'] as string;
-      
-//       const dto = plainToInstance(QrValidateDTO, { lock, hash });
-//       const errs = await validate(dto, { whitelist: true });
-      
-//       if (errs.length > 0) next(errs);
-//       const permission = await this.service.validateQr(dto);
-//       if (permission) {
-//         res.status(200).send({
-//           success: true,
-//         });
-//       } else {
-//         res.status(403).send({
-//           success: false,
-//         });
-//       }
-//     } catch (err) {
-//       next(err);
-//     }
-//   };
-// }
